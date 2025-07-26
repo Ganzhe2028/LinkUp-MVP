@@ -2,7 +2,8 @@
 
 <div align="center">
 
-![LinkUp Logo](src/assets/logo.svg)
+<!-- ![LinkUp Logo](src/assets/logo.svg) -->
+![LinkUp Logo](src/assets/logo-light.svg)
 
 **🚀 基于AI的智能人才匹配平台，重新定义招聘体验**
 
