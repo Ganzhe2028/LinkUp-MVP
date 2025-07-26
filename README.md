@@ -7,7 +7,7 @@
 **🚀 基于AI的智能人才匹配平台，重新定义招聘体验**
 
 [![GitHub](https://img.shields.io/badge/GitHub-LinkUp--MVP-blue?logo=github)](https://github.com/Ganzhe2028/LinkUp-MVP)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![React](https://img.shields.io/badge/React-18.2.0-blue?logo=react)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/Vite-5.4.11-646CFF?logo=vite)](https://vitejs.dev/)
 
@@ -172,7 +172,7 @@ npm run lint       # 代码检查
 
 ## 📄 许可证
 
-本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情
+本项目采用 Apache License 2.0 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情
 
 ## 📞 联系我们
 
