@@ -8,6 +8,8 @@
 
 ![LinkUp Cover](https://pic1.imgdb.cn/item/6884b77258cb8da5c8e228e7.png)
 
+[Figma设计稿](https://www.figma.com/design/lf8wVNMawzHXcnGCAwqd6K/LinkUp?node-id=349-3230&t=bYMjyKe6OCa8nvuM-1)
+
 **🚀 基于 AI 的智能人才匹配平台，重新定义链接体验**
 
 ### 赛道

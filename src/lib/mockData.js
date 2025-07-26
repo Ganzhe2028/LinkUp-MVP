@@ -11,11 +11,36 @@ const professions = [
   '作家', '记者', '翻译', '人力资源', '运营经理', '投资顾问', '创业者'
 ];
 
-// 地区列表
-const regions = [
+// 地区列表 - 按国内外分类
+const chinaRegions = [
   '北京', '上海', '广州', '深圳', '杭州', '成都', '武汉', '西安', '南京', '苏州',
   '天津', '重庆', '青岛', '大连', '厦门', '长沙', '郑州', '济南', '福州', '合肥',
-  '纽约', '伦敦', '东京', '新加坡', '香港', '悉尼', '多伦多', '温哥华', '洛杉矶', '旧金山'
+  '石家庄', '太原', '沈阳', '长春', '哈尔滨', '昆明', '贵阳', '南宁', '兰州', '银川',
+  '西宁', '拉萨', '乌鲁木齐', '呼和浩特', '南昌', '海口', '三亚', '珠海', '佛山', '东莞',
+  '中山', '惠州', '汕头', '湛江', '江门', '茂名', '肇庆', '梅州', '汕尾', '河源',
+  '阳江', '清远', '潮州', '揭阳', '云浮', '无锡', '常州', '徐州', '南通', '连云港',
+  '淮安', '盐城', '扬州', '镇江', '泰州', '宿迁', '温州', '嘉兴', '湖州', '绍兴',
+  '金华', '衢州', '舟山', '台州', '丽水', '烟台', '潍坊', '济宁', '泰安', '威海',
+  '日照', '临沂', '德州', '聊城', '滨州', '菏泽', '枣庄', '东营', '洛阳', '开封',
+  '平顶山', '安阳', '鹤壁', '新乡', '焦作', '濮阳', '许昌', '漯河', '三门峡', '商丘',
+  '周口', '驻马店', '南阳', '信阳', '绵阳', '自贡', '攀枝花', '泸州', '德阳', '广元',
+  '遂宁', '内江', '乐山', '南充', '眉山', '宜宾', '广安', '达州', '雅安', '巴中'
+];
+
+const overseasRegions = [
+  '纽约', '洛杉矶', '旧金山', '西雅图', '芝加哥', '波士顿', '华盛顿', '迈阿密',
+  '伦敦', '曼彻斯特', '爱丁堡', '都柏林', '巴黎', '马赛', '里昂', '柏林',
+  '慕尼黑', '法兰克福', '汉堡', '东京', '大阪', '京都', '横滨', '名古屋',
+  '首尔', '釜山', '新加坡', '吉隆坡', '曼谷', '雅加达', '马尼拉', '胡志明市',
+  '悉尼', '墨尔本', '布里斯班', '珀斯', '多伦多', '温哥华', '蒙特利尔', '渥太华',
+  '香港', '澳门', '台北', '高雄', '苏黎世', '日内瓦', '阿姆斯特丹', '布鲁塞尔'
+];
+
+// 合并所有地区，中国地区占比更高
+const regions = [
+  ...chinaRegions,
+  ...chinaRegions, // 重复一次，增加中国地区的权重
+  ...overseasRegions
 ];
 
 // 技能列表
@@ -39,18 +64,50 @@ const generateAvatar = (gender) => {
 };
 
 // 生成个人简介
-const generateBio = () => {
+const generateBio = (profession, region) => {
+  const isChina = chinaRegions.includes(region);
+  const isEntrepreneur = profession === '创业者';
+  
   const templates = [
-    `我是一名${faker.helpers.arrayElement(professions)}，拥有${faker.number.int({ min: 3, max: 15 })}年的行业经验。专注于${faker.helpers.arrayElement(skills)}领域，曾参与多个大型项目的开发与管理。热爱技术创新，期待与志同道合的伙伴合作。`,
-    `来自${faker.helpers.arrayElement(regions)}的${faker.helpers.arrayElement(professions)}，擅长${faker.helpers.arrayElement(skills)}和${faker.helpers.arrayElement(skills)}。相信技术改变世界，致力于用创新解决实际问题。`,
-    `资深${faker.helpers.arrayElement(professions)}，在${faker.helpers.arrayElement(industries)}领域有丰富经验。追求极致的用户体验，注重团队协作与知识分享。`
+    `我是一名${profession}，拥有${faker.number.int({ min: 3, max: 15 })}年的行业经验。专注于${faker.helpers.arrayElement(skills)}领域，曾参与多个大型项目的开发与管理。热爱技术创新，期待与志同道合的伙伴合作。`,
+    `来自${region}的${profession}，擅长${faker.helpers.arrayElement(skills)}和${faker.helpers.arrayElement(skills)}。相信技术改变世界，致力于用创新解决实际问题。`,
+    `资深${profession}，在${faker.helpers.arrayElement(industries)}领域有丰富经验。追求极致的用户体验，注重团队协作与知识分享。`
   ];
+  
+  // 为创业者生成特殊的简介
+  if (isEntrepreneur) {
+    const entrepreneurTemplates = [
+      `${isChina ? '中国' : '海外'}连续创业者，专注于${faker.helpers.arrayElement(industries)}领域。曾成功创立并运营多家公司，拥有丰富的商业经验和资源网络。正在寻找志同道合的合作伙伴。`,
+      `来自${region}的创业者，在${faker.helpers.arrayElement(industries)}行业深耕${faker.number.int({ min: 5, max: 20 })}年。擅长${faker.helpers.arrayElement(skills)}，致力于通过创新技术解决行业痛点。`,
+      `${isChina ? '国内' : '海外'}知名创业者，曾获得多轮融资。专注于${faker.helpers.arrayElement(industries)}赛道，拥有强大的团队管理和商业拓展能力。欢迎投资人和合作伙伴交流。`,
+      `资深${profession}，在${region}创立了多家${faker.helpers.arrayElement(industries)}公司。拥有从0到1的完整创业经验，熟悉产品开发、市场推广、团队建设等各个环节。`
+    ];
+    return faker.helpers.arrayElement(entrepreneurTemplates);
+  }
+  
   return faker.helpers.arrayElement(templates);
+};
+
+// 判断是否为中国地区
+export const isChinaRegion = (region) => {
+  return chinaRegions.includes(region);
+};
+
+// 获取中国地区列表
+export const getChinaRegions = () => {
+  return [...chinaRegions];
+};
+
+// 获取海外地区列表
+export const getOverseasRegions = () => {
+  return [...overseasRegions];
 };
 
 // 生成单个用户数据
 export const generateUser = () => {
   const gender = faker.helpers.arrayElement(['男', '女']);
+  const profession = faker.helpers.arrayElement(professions);
+  const region = faker.helpers.arrayElement(regions);
   const registerTime = faker.date.between({ 
     from: new Date(2021, 0, 1), 
     to: new Date() 
@@ -67,9 +124,9 @@ export const generateUser = () => {
     avatar: generateAvatar(gender),
     gender,
     age: faker.number.int({ min: 18, max: 65 }),
-    profession: faker.helpers.arrayElement(professions),
-    region: faker.helpers.arrayElement(regions),
-    bio: generateBio(),
+    profession,
+    region,
+    bio: generateBio(profession, region),
     registerTime: registerTime.toISOString(),
     lastLoginTime: lastLoginTime.toISOString(),
     followers: faker.number.int({ min: 0, max: 10000 }),
