@@ -1,5 +1,5 @@
 import OpenAI from 'openai';
-import { generateUsers, isChinaRegion, getChinaRegions, getOverseasRegions } from './mockData';
+import { generateUsers } from './mockData';
 
 // 从环境变量获取API配置
 const KIMI_API_KEY = import.meta.env.VITE_KIMI_API_KEY;
@@ -135,46 +135,23 @@ const generateAchievements = (user) => {
 const generateMockSearchResults = (query, talentPool) => {
   const keywords = query.toLowerCase().split(/[，,\s]+/).filter(k => k.length > 0);
   
-  // 增强的智能关键词映射
+  // 智能关键词映射
   const keywordMapping = {
-    // 职业相关
-    '产品经理': ['产品经理', '产品', 'PM', 'Product Manager'],
-    '前端': ['前端工程师', '前端开发', 'Frontend', 'React', 'Vue', 'JavaScript', 'Web开发'],
-    '后端': ['后端工程师', '后端开发', 'Backend', 'Java', 'Python', 'Node.js', '服务端'],
-    '设计师': ['UI设计师', 'UX设计师', '视觉设计', '交互设计', '平面设计'],
-    '数据': ['数据分析师', '数据科学家', '数据挖掘', 'Python', 'SQL', '大数据'],
-    'AI': ['人工智能', '机器学习', '深度学习', 'Python', 'TensorFlow', 'PyTorch'],
-    '创业者': ['创业者', '创始人', 'CEO', '企业家', '创业', '创新', '商业', '投资'],
-    '程序员': ['程序员', '开发者', '工程师', '编程', '软件开发', 'Developer'],
-    
-    // 地理位置相关
-    '中国': [...getChinaRegions(), '国内', '中国大陆', '内地', '本土'],
-    '国内': [...getChinaRegions(), '中国', '中国大陆', '内地', '本土'],
-    '海外': [...getOverseasRegions(), '国外', '境外', '海外市场'],
-    '国外': [...getOverseasRegions(), '海外', '境外', '国际'],
-    '北京': ['北京', '京', '首都', '帝都'],
-    '上海': ['上海', '沪', '魔都'],
-    '深圳': ['深圳', '深', '鹏城'],
-    '杭州': ['杭州', '杭', '杭城'],
-    '广州': ['广州', '穗', '羊城'],
-    '成都': ['成都', '蓉', '蓉城'],
-    
-    // 技术相关
-    'react': ['React', 'JavaScript', '前端', 'JSX', 'Redux'],
-    'vue': ['Vue', 'JavaScript', '前端', 'Vuex', 'Nuxt'],
-    'python': ['Python', '后端', '数据', 'Django', 'Flask'],
-    'java': ['Java', '后端', 'Spring', 'SpringBoot'],
-    'javascript': ['JavaScript', 'JS', '前端', 'Node.js'],
-    
-    // 经验级别
-    '资深': ['高级', '资深', '专家', '架构师', '技术总监', 'Senior'],
-    '初级': ['初级', '入门', '新手', '应届', 'Junior'],
-    '中级': ['中级', '有经验', '熟练', 'Mid-level'],
-    
-    // 工作方式
-    '远程': ['远程工作', '在家办公', 'WFH', '分布式'],
-    '全职': ['全职', '正式员工', 'Full-time'],
-    '兼职': ['兼职', '自由职业', 'Part-time', 'Freelance']
+    '产品经理': ['产品经理', '产品', 'PM'],
+    '前端': ['前端工程师', '前端开发', 'Frontend', 'React', 'Vue', 'JavaScript'],
+    '后端': ['后端工程师', '后端开发', 'Backend', 'Java', 'Python', 'Node.js'],
+    '设计师': ['UI设计师', 'UX设计师', '视觉设计', '交互设计'],
+    '数据': ['数据分析师', '数据科学家', '数据挖掘', 'Python', 'SQL'],
+    'AI': ['人工智能', '机器学习', '深度学习', 'Python', 'TensorFlow'],
+    '北京': ['北京', '京'],
+    '上海': ['上海', '沪'],
+    '深圳': ['深圳', '深'],
+    '杭州': ['杭州', '杭'],
+    'react': ['React', 'JavaScript', '前端'],
+    'python': ['Python', '后端', '数据'],
+    '资深': ['高级', '资深', '专家', '架构师'],
+    '初级': ['初级', '入门', '新手', '应届'],
+    '远程': ['远程工作', '在家办公', 'WFH']
   };
   
   // 扩展关键词
@@ -188,19 +165,6 @@ const generateMockSearchResults = (query, talentPool) => {
     });
   });
   
-  // 特殊处理：检测地理位置过滤需求
-  const needChinaFilter = keywords.some(k => 
-    ['中国', '国内', '内地', '本土', '中国大陆'].includes(k)
-  );
-  const needOverseasFilter = keywords.some(k => 
-    ['海外', '国外', '境外', '国际'].includes(k)
-  );
-  
-  // 特殊处理：检测职业过滤需求
-  const needEntrepreneurFilter = keywords.some(k => 
-    ['创业者', '创始人', 'ceo', '企业家', '创业'].includes(k)
-  );
-  
   // 计算匹配分数
   const scoredResults = talentPool.map(user => {
     const searchText = [
@@ -210,50 +174,21 @@ const generateMockSearchResults = (query, talentPool) => {
       ...user.skills,
       ...user.industries,
       user.bio,
-      user.workStatus || '',
-      ...(user.personality || []),
-      user.educationDetails?.major || '',
-      user.educationDetails?.university || '',
-      user.locationPreference || ''
+      user.workStatus,
+      ...user.personality,
+      user.educationDetails.major,
+      user.educationDetails.university,
+      user.locationPreference
     ].join(' ').toLowerCase();
     
     let score = 0;
     let matchedKeywords = [];
     let matchReasons = [];
     
-    // 地理位置过滤
-    if (needChinaFilter && !isChinaRegion(user.region)) {
-      return { ...user, matchScore: 0, matchReasons: ['不在中国地区'] };
-    }
-    if (needOverseasFilter && isChinaRegion(user.region)) {
-      return { ...user, matchScore: 0, matchReasons: ['不在海外地区'] };
-    }
-    
-    // 职业过滤
-    if (needEntrepreneurFilter && user.profession !== '创业者') {
-      score -= 20; // 减分但不完全排除
-    }
-    
-    // 地理位置匹配加分
-    if (needChinaFilter && isChinaRegion(user.region)) {
-      score += 40;
-      matchReasons.push('位于中国地区');
-    }
-    if (needOverseasFilter && !isChinaRegion(user.region)) {
-      score += 40;
-      matchReasons.push('位于海外地区');
-    }
-    
-    // 职业精确匹配
-    if (needEntrepreneurFilter && user.profession === '创业者') {
-      score += 50;
-      matchReasons.push('职业为创业者');
-    }
-    
     // 计算关键词匹配分数
     expandedKeywords.forEach(keyword => {
       if (searchText.includes(keyword)) {
-        score += 8;
+        score += 10;
         if (!matchedKeywords.includes(keyword)) {
           matchedKeywords.push(keyword);
         }
@@ -268,45 +203,27 @@ const generateMockSearchResults = (query, talentPool) => {
     
     // 地区匹配加分
     if (keywords.some(k => user.region.toLowerCase().includes(k))) {
-      score += 25;
+      score += 20;
       matchReasons.push('地理位置匹配');
     }
     
     // 技能匹配加分
     const skillMatches = user.skills.filter(skill => 
-      keywords.some(k => skill.toLowerCase().includes(k)) ||
-      expandedKeywords.some(k => skill.toLowerCase().includes(k))
+      keywords.some(k => skill.toLowerCase().includes(k))
     );
     if (skillMatches.length > 0) {
       score += skillMatches.length * 15;
       matchReasons.push(`${skillMatches.length}项技能匹配`);
     }
     
-    // 行业匹配加分
-    const industryMatches = user.industries.filter(industry => 
-      keywords.some(k => industry.toLowerCase().includes(k)) ||
-      expandedKeywords.some(k => industry.toLowerCase().includes(k))
-    );
-    if (industryMatches.length > 0) {
-      score += industryMatches.length * 12;
-      matchReasons.push(`${industryMatches.length}项行业匹配`);
-    }
-    
-    // 简介内容匹配
-    const bioMatches = keywords.filter(k => user.bio.toLowerCase().includes(k));
-    if (bioMatches.length > 0) {
-      score += bioMatches.length * 10;
-      matchReasons.push('个人简介匹配');
-    }
-    
     // 工作状态匹配
-    if (user.workStatus && keywords.some(k => user.workStatus.toLowerCase().includes(k))) {
+    if (keywords.some(k => user.workStatus.toLowerCase().includes(k))) {
       score += 10;
       matchReasons.push('工作状态匹配');
     }
     
     // 教育背景匹配
-    if (user.educationDetails && keywords.some(k => 
+    if (keywords.some(k => 
       user.educationDetails.university.toLowerCase().includes(k) ||
       user.educationDetails.major.toLowerCase().includes(k)
     )) {
@@ -327,51 +244,38 @@ const generateMockSearchResults = (query, talentPool) => {
   const filteredResults = scoredResults
     .filter(user => user.matchScore > 0)
     .sort((a, b) => b.matchScore - a.matchScore)
-    .slice(0, 15); // 增加结果数量
+    .slice(0, 10);
   
-  // 如果没有匹配结果，返回一些符合条件的候选人
+  // 如果没有匹配结果，返回一些随机的高质量候选人
   if (filteredResults.length === 0) {
-    let fallbackUsers = talentPool;
-    
-    // 根据搜索条件过滤备选用户
-    if (needChinaFilter) {
-      fallbackUsers = fallbackUsers.filter(user => isChinaRegion(user.region));
-    }
-    if (needOverseasFilter) {
-      fallbackUsers = fallbackUsers.filter(user => !isChinaRegion(user.region));
-    }
-    if (needEntrepreneurFilter) {
-      fallbackUsers = fallbackUsers.filter(user => user.profession === '创业者');
-    }
-    
-    return fallbackUsers.slice(0, 5).map(user => ({
+    return talentPool.slice(0, 5).map(user => ({
       ...user,
-      matchScore: Math.floor(Math.random() * 20) + 50,
-      matchReason: '基于搜索条件推荐的候选人',
+      matchScore: Math.floor(Math.random() * 20) + 60,
+      matchReason: '基于综合评估推荐的优质候选人',
       relevantSkills: user.skills.slice(0, 3),
-      highlights: [`${user.profession}专业`, `${user.region}地区`, `${user.experience}经验`],
-      potentialValue: '符合基本搜索条件的优质候选人'
+      highlights: [`${user.profession}专业`, `${user.experience}经验`, '综合素质优秀'],
+      potentialValue: '具有良好的发展潜力和专业背景'
     }));
   }
   
   // 生成详细的匹配信息
   return filteredResults.map(user => {
-    const matchReason = user.matchReasons && user.matchReasons.length > 0 
+    const matchReason = user.matchReasons.length > 0 
       ? user.matchReasons.join('，') 
       : '基于关键词匹配分析';
     
     const highlights = [
-      `${user.profession || '未知职业'}背景`,
-      `${user.region || '未知地区'}地区`,
-      `${user.experience || '未知'}经验`,
-      ...(user.personality || []).slice(0, 2)
+      `${user.profession}背景`,
+      `${user.region}地区`,
+      `${user.experience}经验`,
+      ...user.personality.slice(0, 2)
     ].slice(0, 4);
     
     const potentialValue = generatePotentialValue(user, query);
     
     return {
       ...user,
-      matchReason: `${matchReason}，匹配度${user.matchScore || 0}%`,
+      matchReason: `${matchReason}，匹配度${user.matchScore}%`,
       highlights,
       potentialValue
     };
@@ -388,21 +292,21 @@ const generatePotentialValue = (user, query) => {
     values.push('具有良好匹配度的候选人');
   }
   
-  if (user.workStatus && user.workStatus.includes('急寻')) {
+  if (user.workStatus.includes('急寻')) {
     values.push('求职意愿强烈，可快速入职');
-  } else if (user.workStatus && user.workStatus.includes('考虑')) {
+  } else if (user.workStatus.includes('考虑')) {
     values.push('对优质机会开放，可深度沟通');
   }
   
-  if (user.experience && (user.experience.includes('5年以上') || user.experience.includes('资深'))) {
+  if (user.experience.includes('5年以上') || user.experience.includes('资深')) {
     values.push('丰富经验，可独当一面');
   }
   
-  if (user.personality && user.personality.includes('学习能力强')) {
+  if (user.personality.includes('学习能力强')) {
     values.push('学习能力强，适应性好');
   }
   
-  if (user.personality && user.personality.includes('团队合作')) {
+  if (user.personality.includes('团队合作')) {
     values.push('团队协作能力优秀');
   }
   
