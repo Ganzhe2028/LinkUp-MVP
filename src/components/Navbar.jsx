@@ -22,13 +22,12 @@ const Navbar = () => {
     <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center space-x-10">
-          <Link to="/" className="flex items-center space-x-2 font-bold text-xl text-blue-600">
+          <Link to="/" className="flex items-center font-bold text-xl text-blue-600">
             <img 
               src={logoImage} 
               alt="LinkUp Logo" 
-              className="w-8 h-8 object-contain"
+              className="h-8 w-auto object-contain"
             />
-            <span>LinkUp</span>
           </Link>
           
           <nav className="hidden md:flex items-center space-x-1">
