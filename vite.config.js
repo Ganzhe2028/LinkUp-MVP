@@ -33,11 +33,14 @@ const plugins = isProdEnv
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
-    host: '::',
-    port: '8080',
+    host: '0.0.0.0', // 允许局域网访问
+    port: 8080,
     hmr: {
       overlay: false,
+      port: 8080, // 确保HMR也使用相同端口
     },
+    // 可选：如果需要HTTPS
+    // https: false,
   },
   plugins,
   base: publicPath,
