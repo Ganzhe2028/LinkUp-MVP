@@ -56,7 +56,7 @@ const Index = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Button className="bg-white text-blue-600 hover:bg-blue-50 h-12 px-8 text-lg rounded-xl" asChild>
-              <Link to="/users">立即体验</Link>
+              <Link to="/auth">立即注册</Link>
             </Button>
             <Button variant="secondary" className="h-12 px-8 text-lg rounded-xl">
               了解更多
@@ -64,7 +64,7 @@ const Index = () => {
           </div>
         </div>
       </div>
-
+// Remove smart search demo and featured users sections as they relate to deleted features
       {/* 智能搜索演示 */}
       <div className="bg-gray-50 py-16">
         <div className="container mx-auto px-4">

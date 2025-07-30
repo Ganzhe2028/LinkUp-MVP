@@ -31,7 +31,6 @@ const Footer = () => {
             <h3 className="text-lg font-bold mb-4">快速链接</h3>
             <ul className="space-y-2">
               <li><Link to="/" className="text-gray-600 hover:text-blue-600">首页</Link></li>
-              <li><Link to="/match" className="text-gray-600 hover:text-blue-600">智能匹配</Link></li>
               <li><Link to="/profile" className="text-gray-600 hover:text-blue-600">个人资料</Link></li>
               <li><Link to="/auth" className="text-gray-600 hover:text-blue-600">登录注册</Link></li>
             </ul>
