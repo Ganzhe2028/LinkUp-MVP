@@ -61,7 +61,7 @@ const Navbar = () => {
           ) : (
             <>
               <Button variant="outline" asChild>
-                <Link to="/auth">登录/注册</Link>
+                <Link to="/auth"></Link>
               </Button>
               <Button className="bg-blue-600 hover:bg-blue-700">发布需求</Button>
             </>
