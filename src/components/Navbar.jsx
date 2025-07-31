@@ -32,7 +32,15 @@ const Navbar = () => {
           
           <nav className="hidden md:flex items-center space-x-1">
             {navItems
-              .filter(item => !item.hideInNav)
+              .filter(item => {
+                // 隐藏标记为hideInNav的项目
+                if (item.hideInNav) return false;
+                
+                // 个人资料页面只在用户登录后显示
+                if (item.to === '/profile' && !user) return false;
+                
+                return true;
+              })
               .map((item) => (
                 <Button
                   key={item.to}
@@ -59,12 +67,9 @@ const Navbar = () => {
               </Button>
             </>
           ) : (
-            <>
-              <Button variant="outline" asChild>
-                <Link to="/auth"></Link>
-              </Button>
-              <Button className="bg-blue-600 hover:bg-blue-700">发布需求</Button>
-            </>
+            <Button variant="outline" asChild>
+              <Link to="/auth">登录/注册</Link>
+            </Button>
           )}
         </div>
       </div>

@@ -64,7 +64,7 @@ const Index = () => {
           </div>
         </div>
       </div>
-// Remove smart search demo and featured users sections as they relate to deleted features
+{/* // Remove smart search demo and featured users sections as they relate to deleted features */}
       {/* 智能搜索演示 */}
       <div className="bg-gray-50 py-16">
         <div className="container mx-auto px-4">
