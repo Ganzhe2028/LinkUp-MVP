@@ -4,8 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
-import { Github, Linkedin, Twitter } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 
@@ -105,23 +103,6 @@ const Auth = () => {
             >
               {loading ? '处理中...' : (isLogin ? '登录' : '注册')}
             </Button>
-            
-            <Separator className="my-4" />
-            
-            <div className="flex flex-col space-y-3">
-              <Button variant="outline" className="flex items-center gap-2 rounded-xl">
-                <Github className="h-4 w-4" />
-                使用 GitHub 登录
-              </Button>
-              <Button variant="outline" className="flex items-center gap-2 rounded-xl">
-                <Linkedin className="h-4 w-4" />
-                使用 LinkedIn 登录
-              </Button>
-              <Button variant="outline" className="flex items-center gap-2 rounded-xl">
-                <Twitter className="h-4 w-4" />
-                使用 Twitter 登录
-              </Button>
-            </div>
             
             <div className="text-center text-sm mt-4">
               <button 
